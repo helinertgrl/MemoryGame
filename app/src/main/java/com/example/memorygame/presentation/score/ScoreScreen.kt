@@ -1,4 +1,4 @@
-package com.example.memorygame
+package com.example.memorygame.presentation.score
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
@@ -31,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.memorygame.presentation.game.GameViewModel
 
 @Composable
 fun ScoreScreen(viewModel: GameViewModel = viewModel()) {

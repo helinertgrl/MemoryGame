@@ -1,4 +1,4 @@
-package com.example.memorygame
+package com.example.memorygame.presentation.game
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel

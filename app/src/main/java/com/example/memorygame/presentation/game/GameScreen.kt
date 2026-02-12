@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,18 +21,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.memorygame.presentation.game.GameViewModel
 import com.example.memorygame.R
 import kotlinx.coroutines.delay
 
@@ -40,140 +37,121 @@ import kotlinx.coroutines.delay
 @Composable
 fun GameScreen(viewModel: GameViewModel = viewModel()) {
 
-    val emojilist = listOf(
-        R.drawable.alien,
-        R.drawable.monkey,
-        R.drawable.sad,
-        R.drawable.poop,
-        R.drawable.heart,
-        R.drawable.evil,
-        R.drawable.pumpkin,
-        R.drawable.ghost,
-        R.drawable.alien,
-        R.drawable.monkey,
-        R.drawable.sad,
-        R.drawable.poop,
-        R.drawable.heart,
-        R.drawable.evil,
-        R.drawable.pumpkin,
-        R.drawable.ghost
-    )
-
-    val shuffledList = remember { emojilist.shuffled() }
-
-    val faceUp = remember {
-        mutableStateListOf<Boolean>().apply {
-            repeat(16) {
-                add(false)
-            }
-        }
+    val emojilist = remember {
+        val baseEmojis = listOf(
+            R.drawable.alien,
+            R.drawable.monkey,
+            R.drawable.sad,
+            R.drawable.poop,
+            R.drawable.heart,
+            R.drawable.evil,
+            R.drawable.pumpkin,
+            R.drawable.ghost
+        )
+        (baseEmojis + baseEmojis).shuffled()
     }
 
-    val matched = remember {
-        mutableStateListOf<Boolean>().apply {
-            repeat(16) {
-                add(false)
-            }
-        }
-    }
-
-    val selected = remember { mutableStateListOf<Int>() }
-
-    val toClose = remember { mutableStateListOf<Int>() }
-
-
-    LaunchedEffect(toClose.toList()) {
-        if (toClose.size == 2) {
+    LaunchedEffect(
+        viewModel.faceUpCards.size
+    ) {
+        if (viewModel.faceUpCards.size == 2) {
             delay(800)
-            toClose.forEach { index ->
-                faceUp[index] = false
-            }
-            toClose.clear()
-            selected.clear()
+            viewModel.clearFaceUp()
         }
     }
+
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text(text = "Game Screen") }) }
-    ) {
+        topBar = { TopAppBar(title = { Text(text = "Memory Game") }) }
+    ) { paddingValues ->
         Column(
             modifier = Modifier.fillMaxSize()
-                .padding(it),
+                .padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            ScoreBoard(moves = viewModel.moves.value, score = viewModel.score.value)
+
+            CardGrid(
+                shuffledList = emojilist,
+                faceUpCard = viewModel.faceUpCards,
+                matchedCards = viewModel.matchedCards,
+                onCardClick = { index -> viewModel.onCardClick(index, emojilist) }
+            )
+        }
+    }
+}
+@Composable
+fun ScoreBoard(moves: Int, score: Int) {
+    Row(
+        modifier = Modifier.fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Text(
-                text = "Moves: ${viewModel.moves.value}",
-                fontSize = 20.sp
+                text = "Hamleler",
+                fontSize = 14.sp,
+                color = Color.Gray
             )
             Text(
-                text = "Score: ${viewModel.score.value}",
-                fontSize = 20.sp
+                text = "$moves",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-
-            rowCard(
-                shuffledList = shuffledList,
-                faceUp = faceUp,
-                matched = matched,
-                selected = selected,
-                toClose = toClose,
-                onMove = { viewModel.increaseMove() },
-                onScore = { viewModel.increaseScore() })
+        }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Skor",
+                fontSize = 14.sp,
+                color = Color.Gray
+            )
+            Text(
+                text = "$score",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF4CAF50)
+            )
         }
     }
 }
 
-
-
-
 @Composable
-fun rowCard(
+fun CardGrid(
     shuffledList: List<Int>,
-    faceUp: SnapshotStateList<Boolean>,
-    matched: SnapshotStateList<Boolean>,
-    selected: SnapshotStateList<Int>,
-    toClose: SnapshotStateList<Int>,
-    onMove: ()-> Unit,
-    onScore: ()-> Unit
-) {
-
+    faceUpCard: List<Int>,
+    matchedCards: List<Int>,
+    onCardClick: (Int) -> Unit
+){
     val grouped = shuffledList.chunked(4)
 
-
-    grouped.forEachIndexed { rowIndex, rowItems ->
-        Row {
-            rowItems.forEachIndexed { colIndex, imageRes ->
-                val globalIndex = rowIndex * 4 +colIndex
-                myCard(imageRes = shuffledList[globalIndex],
-                    isFaceUp = faceUp[globalIndex],
-                    isMatched = matched[globalIndex],
-                    onClick = {
-                        if (!faceUp[globalIndex] && !matched[globalIndex]){
-                            faceUp[globalIndex] = true
-                            selected.add(globalIndex)
-
-                            if (selected.size == 2){
-                                onMove()
-                                val first = selected[0]
-                                val second = selected[1]
-
-                                if (shuffledList[first] == shuffledList[second]){
-                                    matched[first] = true
-                                    matched[second] = true
-                                    selected.clear()
-                                    onScore()
-                                }else {
-                                    toClose.add(first)
-                                    toClose.add(second)
-                                }
-                            }
-
-                        }
-                    }
-                )
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(8.dp)
+    ) {
+        grouped.forEachIndexed { rowIndex, rowItems ->
+            Row (
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ){
+                rowItems.forEachIndexed { colIndex, _ ->
+                    val globalIndex = rowIndex * 4 + colIndex
+                    myCard(
+                        imageRes = shuffledList[globalIndex],
+                        isFaceUp = faceUpCard.contains(globalIndex),
+                        isMatched = matchedCards.contains(globalIndex),
+                        onClick = { onCardClick(globalIndex) }
+                    )
+                    if (colIndex < 3)
+                        Spacer(modifier = Modifier.size(8.dp))
+                }
             }
         }
     }
@@ -184,36 +162,38 @@ fun myCard(
     imageRes: Int,
     isFaceUp: Boolean,
     isMatched: Boolean,
-    onClick: () -> Unit){
-
-    Card (
-        modifier = Modifier.size(95.dp)
-            .padding(5.dp)
-            .clickable{
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier.size(85.dp)
+            .clickable(enabled = !isMatched && !isFaceUp) {
                 onClick()
             },
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 8.dp
-        ),
-        shape = RoundedCornerShape(14.dp),
-        border = BorderStroke(1.dp,Color.Black),
+            defaultElevation = if (isFaceUp || isMatched) 0.dp else 8.dp),
+        shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(1.dp, Color.Black),
         colors = CardDefaults.cardColors(
-            containerColor = Color.DarkGray
+            containerColor = if (isMatched) Color.LightGray else Color.DarkGray
         )
-    ){
-        if (isFaceUp || isMatched == true){    //true yazmasak da olur.
-            Image(painterResource(imageRes), contentDescription = "$imageRes")
-        }else {
-            Box(Modifier.fillMaxSize())
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            if (isFaceUp || isMatched) {
+                Image(
+                    painter = painterResource(imageRes),
+                    contentDescription = "emoji",
+                    modifier = Modifier.size(50.dp)
+                )
+            } else {
+                Text(
+                    text = "?",
+                    color = Color.White,
+                    fontSize = 24.sp)
+            }
         }
     }
 }
-
-
-@Preview(showBackground = true)
-@Composable
-fun preview(){
-    GameScreen()
-}
-
 

@@ -16,7 +16,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.memorygame.presentation.components.BottomNavi
 import com.example.memorygame.presentation.game.GameScreen
-import com.example.memorygame.presentation.onboarding.MainMenu
+import com.example.memorygame.presentation.onboarding.OnboardingScreen
 import com.example.memorygame.presentation.score.ScoreScreen
 
 interface Destinations{
@@ -53,7 +53,7 @@ fun memoryGame(){
         Box(modifier = Modifier.padding(it)){
             NavHost(navController = navController, startDestination = Main.route){
                 composable (route = Main.route) {
-                    MainMenu(navController)
+                    OnboardingScreen(navController)
                 }
                 composable(route = Game.route) {
                     GameScreen(viewModel = viewModel())

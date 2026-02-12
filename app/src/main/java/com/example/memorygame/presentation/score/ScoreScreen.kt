@@ -96,9 +96,3 @@ fun ScoreScreen(viewModel: GameViewModel = viewModel()) {
         )
     }
 }
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun prevv() {
-    ScoreScreen()
-}

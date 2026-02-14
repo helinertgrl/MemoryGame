@@ -34,7 +34,7 @@ import com.example.memorygame.presentation.Game
 @Composable
 fun OnboardingScreen(
     navController: NavController,
-    viewModel: OnboardingViewModel = viewModel()
+    viewModel: OnboardingViewModel
     ) {
 
     val nickname by viewModel.nickname
@@ -90,7 +90,7 @@ fun OnboardingScreen(
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
-                if (viewModel.isNameValid()) {
+                viewModel.saveUserAndContinue {
                     navController.navigate(Game.route)
                 }
             },

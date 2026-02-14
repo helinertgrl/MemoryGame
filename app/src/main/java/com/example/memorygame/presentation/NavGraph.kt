@@ -1,14 +1,10 @@
 package com.example.memorygame.presentation
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
@@ -18,9 +14,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.memorygame.data.AppDatabase
-import com.example.memorygame.presentation.components.BottomNavi
+import com.example.memorygame.data.UserPreferences
 import com.example.memorygame.presentation.game.GameScreen
+import com.example.memorygame.presentation.game.GameViewModel
 import com.example.memorygame.presentation.onboarding.OnboardingScreen
+import com.example.memorygame.presentation.onboarding.OnboardingViewModel
 import com.example.memorygame.presentation.score.ScoreScreen
 import com.example.memorygame.presentation.score.ScoreViewModel
 
@@ -53,17 +51,32 @@ fun memoryGame(){
     val navController = rememberNavController()
     val context = LocalContext.current
     val database = AppDatabase.getDatabase(context)
+    val userPrefs = UserPreferences(context)
 
-    Scaffold (
-        bottomBar = {BottomNavi(navController)}
-    ) {
-        Box(modifier = Modifier.padding(it)){
-            NavHost(navController = navController, startDestination = Main.route){
+    val onboardingVM : OnboardingViewModel = viewModel(
+        factory = object : ViewModelProvider.Factory{
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return OnboardingViewModel(userPrefs) as T
+            }
+        }
+    )
+
+    val gameVM : GameViewModel = viewModel(
+        factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return GameViewModel(database.scoreDao(), userPrefs) as T
+            }
+        }
+    )
+
+       NavHost(navController = navController, startDestination = Main.route){
                 composable (route = Main.route) {
-                    OnboardingScreen(navController)
+                    OnboardingScreen(
+                        navController = navController,
+                        viewModel = onboardingVM )
                 }
                 composable(route = Game.route) {
-                    GameScreen(viewModel = viewModel())
+                    GameScreen(viewModel = gameVM)
                 }
                 composable (route = Score.route) {
                     val scoreViewModel: ScoreViewModel = viewModel(
@@ -77,5 +90,4 @@ fun memoryGame(){
                 }
             }
         }
-    }
-}
+

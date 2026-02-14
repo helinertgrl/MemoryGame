@@ -3,8 +3,12 @@ package com.example.memorygame.presentation.onboarding
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.memorygame.data.UserPreferences
+import kotlinx.coroutines.launch
 
-class OnboardingViewModel: ViewModel() {
+class OnboardingViewModel(private val userPreferences: UserPreferences): ViewModel() {
 
     private val _nickname = mutableStateOf("")
     val nickname: State<String> = _nickname
@@ -23,6 +27,15 @@ class OnboardingViewModel: ViewModel() {
             false
         } else {
             true
+        }
+    }
+
+    fun saveUserAndContinue(onSuccess: () -> Unit) {
+        if (isNameValid()) {
+            viewModelScope.launch {
+                userPreferences.saveNickname(nickname.value)
+                onSuccess()
+            }
         }
     }
 }

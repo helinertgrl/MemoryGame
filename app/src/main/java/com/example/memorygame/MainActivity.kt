@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.memorygame.presentation.game.GameScreen
+import com.example.memorygame.presentation.memoryGame
 import com.example.memorygame.presentation.score.ScoreScreen
 import com.example.memorygame.ui.theme.MemoryGameTheme
 
@@ -15,6 +16,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MemoryGameTheme {
+                memoryGame()
             }
         }
     }

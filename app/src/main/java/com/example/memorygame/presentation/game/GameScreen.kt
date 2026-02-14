@@ -60,6 +60,12 @@ fun GameScreen(viewModel: GameViewModel = viewModel()) {
         }
     }
 
+    LaunchedEffect(viewModel.matchedCards.size) {
+        if (viewModel.matchedCards.size == 16 && viewModel.matchedCards.size > 0) {
+            viewModel.saveFinalScore()
+        }
+    }
+
 
     Scaffold(
         topBar = { TopAppBar(title = { Text(text = "Memory Game") }) }

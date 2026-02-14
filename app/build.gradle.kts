@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.example.memorygame"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.memorygame"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -61,4 +61,5 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 }

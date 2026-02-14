@@ -4,8 +4,17 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.memorygame.data.ScoreDao
+import com.example.memorygame.data.UserPreferences
+import com.example.memorygame.domain.model.UserScore
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
-class GameViewModel: ViewModel() {
+class GameViewModel(
+    private val scoreDao: ScoreDao,
+    private val userPreferences: UserPreferences
+): ViewModel() {
 
     private val _moves = mutableStateOf(0)
     val moves: State<Int> = _moves
@@ -48,4 +57,18 @@ class GameViewModel: ViewModel() {
         faceUpCards.clear()
         matchedCards.clear()
     }
-}
+
+    fun saveFinalScore(){
+        viewModelScope.launch {
+            val name = userPreferences.nickname.first()
+                if (name.isNotBlank()) {
+                    val finalScore = UserScore(
+                        nickname = name,
+                        moves = _moves.value,
+                        score = _score.value
+                    )
+                    scoreDao.insertScore(finalScore)
+                }
+            }
+        }
+    }

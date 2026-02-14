@@ -69,25 +69,30 @@ fun memoryGame(){
         }
     )
 
-       NavHost(navController = navController, startDestination = Main.route){
-                composable (route = Main.route) {
-                    OnboardingScreen(
-                        navController = navController,
-                        viewModel = onboardingVM )
-                }
-                composable(route = Game.route) {
-                    GameScreen(viewModel = gameVM)
-                }
-                composable (route = Score.route) {
-                    val scoreViewModel: ScoreViewModel = viewModel(
-                        factory = object : ViewModelProvider.Factory {
-                            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                                return ScoreViewModel(database.scoreDao()) as T
-                            }
-                        }
-                    )
-                    ScoreScreen(scoreViewModel = scoreViewModel)
-                }
-            }
+    NavHost(navController = navController, startDestination = Main.route){
+        composable (route = Main.route) {
+            OnboardingScreen(
+                navController = navController,
+                viewModel = onboardingVM )
         }
+        composable(route = Game.route) {
+            GameScreen(
+                viewModel = gameVM,
+                navController = navController)
+        }
+        composable (route = Score.route) {
+            val scoreViewModel: ScoreViewModel = viewModel(
+                factory = object : ViewModelProvider.Factory {
+                    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                        return ScoreViewModel(database.scoreDao()) as T
+                    }
+                }
+            )
+            ScoreScreen(
+                scoreViewModel = scoreViewModel,
+                navController = navController)
+        }
+    }
+}
+
 

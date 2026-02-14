@@ -15,7 +15,6 @@ class GameViewModel(
     private val scoreDao: ScoreDao,
     private val userPreferences: UserPreferences
 ): ViewModel() {
-
     private val _moves = mutableStateOf(0)
     val moves: State<Int> = _moves
 

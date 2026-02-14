@@ -30,12 +30,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.memorygame.R
+import com.example.memorygame.presentation.Game
+import com.example.memorygame.presentation.Score
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GameScreen(viewModel: GameViewModel = viewModel()) {
+fun GameScreen(
+    navController: NavController,
+    viewModel: GameViewModel = viewModel()) {
 
     val emojilist = remember {
         val baseEmojis = listOf(
@@ -51,6 +56,10 @@ fun GameScreen(viewModel: GameViewModel = viewModel()) {
         (baseEmojis + baseEmojis).shuffled()
     }
 
+    LaunchedEffect(Unit) {
+        viewModel.reset()
+    }
+
     LaunchedEffect(
         viewModel.faceUpCards.size
     ) {
@@ -63,6 +72,10 @@ fun GameScreen(viewModel: GameViewModel = viewModel()) {
     LaunchedEffect(viewModel.matchedCards.size) {
         if (viewModel.matchedCards.size == 16 && viewModel.matchedCards.size > 0) {
             viewModel.saveFinalScore()
+            delay(500)
+            navController.navigate(Score.route){
+                popUpTo(Game.route) {inclusive = true}
+            }
         }
     }
 

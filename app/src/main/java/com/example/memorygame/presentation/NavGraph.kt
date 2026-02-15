@@ -5,6 +5,9 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
@@ -53,6 +56,14 @@ fun memoryGame(){
     val database = AppDatabase.getDatabase(context)
     val userPrefs = UserPreferences(context)
 
+    val savedName by userPrefs.nickname.collectAsState(initial = null)
+
+    val startRoute = remember(savedName) {
+        if (savedName == null) null
+        else if (savedName!!.isNotEmpty()) Game.route
+        else Main.route
+    }
+
     val onboardingVM : OnboardingViewModel = viewModel(
         factory = object : ViewModelProvider.Factory{
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -69,28 +80,30 @@ fun memoryGame(){
         }
     )
 
-    NavHost(navController = navController, startDestination = Main.route){
-        composable (route = Main.route) {
-            OnboardingScreen(
-                navController = navController,
-                viewModel = onboardingVM )
-        }
-        composable(route = Game.route) {
-            GameScreen(
-                viewModel = gameVM,
-                navController = navController)
-        }
-        composable (route = Score.route) {
-            val scoreViewModel: ScoreViewModel = viewModel(
-                factory = object : ViewModelProvider.Factory {
-                    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                        return ScoreViewModel(database.scoreDao()) as T
+    if (startRoute != null){
+        NavHost(navController = navController, startDestination = startRoute){
+            composable (route = Main.route) {
+                OnboardingScreen(
+                    navController = navController,
+                    viewModel = onboardingVM )
+            }
+            composable(route = Game.route) {
+                GameScreen(
+                    viewModel = gameVM,
+                    navController = navController)
+            }
+            composable (route = Score.route) {
+                val scoreViewModel: ScoreViewModel = viewModel(
+                    factory = object : ViewModelProvider.Factory {
+                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                            return ScoreViewModel(database.scoreDao()) as T
+                        }
                     }
-                }
-            )
-            ScoreScreen(
-                scoreViewModel = scoreViewModel,
-                navController = navController)
+                )
+                ScoreScreen(
+                    scoreViewModel = scoreViewModel,
+                    navController = navController)
+            }
         }
     }
 }

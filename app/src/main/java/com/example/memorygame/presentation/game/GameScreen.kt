@@ -71,10 +71,10 @@ fun GameScreen(
 
     LaunchedEffect(viewModel.matchedCards.size) {
         if (viewModel.matchedCards.size == 16 && viewModel.matchedCards.size > 0) {
-            viewModel.saveFinalScore()
-            delay(500)
-            navController.navigate(Score.route){
-                popUpTo(Game.route) {inclusive = true}
+            viewModel.saveFinalScore{
+                navController.navigate(Score.route){
+                    popUpTo(Game.route) {inclusive = true}
+                }
             }
         }
     }

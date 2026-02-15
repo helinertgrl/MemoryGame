@@ -18,6 +18,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,13 +26,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.memorygame.domain.model.UserScore
 import com.example.memorygame.presentation.Game
 import com.example.memorygame.presentation.Main
 import com.example.memorygame.presentation.Score
-import com.example.memorygame.presentation.game.GameViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun ScoreScreen(
@@ -79,7 +81,7 @@ fun ScoreScreen(
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "Skor",
+                            text = "Tarih",
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -123,17 +125,24 @@ fun ScoreScreen(
 
 @Composable
 fun ScoreRow(userScore: UserScore) {
+    val dateString = remember(userScore.date) {
+        SimpleDateFormat("dd MMM", Locale.getDefault()).format(Date(userScore.date))
+    }
+
     Row (
         modifier = Modifier.fillMaxWidth()
             .padding(8.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ){
-        Text(text = userScore.nickname)
-        Text(text = "${userScore.moves}")
-        Text(text = "${userScore.score}",
-            color = Color(0xFF4CAF50),
-            fontWeight = FontWeight.Bold
-        )
+        Text(text = userScore.nickname,
+            fontWeight = FontWeight.Bold,
+            fontSize = 14.sp)
+        Text(text = "${userScore.moves}",
+            fontWeight = FontWeight.Bold,
+            fontSize = 14.sp)
+        Text(text = dateString,
+            fontWeight = FontWeight.Bold,
+            fontSize = 14.sp)
 
     }
 }

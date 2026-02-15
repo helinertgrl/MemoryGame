@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.memorygame.data.ScoreDao
 import com.example.memorygame.data.UserPreferences
 import com.example.memorygame.domain.model.UserScore
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -18,11 +19,30 @@ class GameViewModel(
     private val _moves = mutableStateOf(0)
     val moves: State<Int> = _moves
 
+    private val _isSaving = mutableStateOf(false)
+    val isSaving : State<Boolean> = _isSaving
+
     private val _score = mutableStateOf(0)
     val score: State<Int> = _score
 
     val faceUpCards = mutableStateListOf<Int>()
     val matchedCards = mutableStateListOf<Int>()
+
+    fun saveFinalScore(onComplete: () -> Unit){
+        if (_isSaving.value) return
+        _isSaving.value = true
+
+        viewModelScope.launch {
+            val name = userPreferences.nickname.first()
+            if (name.isNotBlank()){
+                val finalScore = UserScore(nickname = name, moves = _moves.value, score = _score.value)
+                scoreDao.insertScore(finalScore)
+                delay(500)
+                _isSaving.value = false
+                onComplete()
+            }
+        }
+    }
 
     fun onCardClick(index: Int, shuffledList : List<Int>){
         if (faceUpCards.contains(index) || matchedCards.contains(index) || faceUpCards.size >=2) return
@@ -56,18 +76,4 @@ class GameViewModel(
         faceUpCards.clear()
         matchedCards.clear()
     }
-
-    fun saveFinalScore(){
-        viewModelScope.launch {
-            val name = userPreferences.nickname.first()
-                if (name.isNotBlank()) {
-                    val finalScore = UserScore(
-                        nickname = name,
-                        moves = _moves.value,
-                        score = _score.value
-                    )
-                    scoreDao.insertScore(finalScore)
-                }
-            }
-        }
-    }
+}

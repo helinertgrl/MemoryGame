@@ -14,4 +14,7 @@ interface ScoreDao {
 
     @Query("SELECT * FROM scores ORDER BY score DESC, moves ASC")
     fun getAllScores(): Flow<List<UserScore>>
+
+    @Query("DELETE FROM scores")
+    suspend fun deleteAllScores()
 }

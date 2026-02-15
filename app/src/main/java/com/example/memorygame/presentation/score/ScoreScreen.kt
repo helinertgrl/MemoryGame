@@ -65,7 +65,7 @@ fun ScoreScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Liderlik Tablosu",
+                text = "⭐ Leaderboard ⭐",
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(vertical = 16.dp)
@@ -88,9 +88,9 @@ fun ScoreScreen(
                             .padding(horizontal = 12.dp, vertical = 8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ){
-                        Text(text = "Oyuncu", modifier = Modifier.weight(1.5f), fontWeight = FontWeight.Black, fontSize = 14.sp)
-                        Text(text = "Hamle", modifier = Modifier.weight(1f), fontWeight = FontWeight.Black, fontSize = 14.sp, textAlign = TextAlign.Center)
-                        Text(text = "Tarih", modifier = Modifier.weight(1f), fontWeight = FontWeight.Black, fontSize = 14.sp, textAlign = TextAlign.End)
+                        Text(text = "Player", modifier = Modifier.weight(1.5f), fontWeight = FontWeight.Black, fontSize = 14.sp)
+                        Text(text = "Moves", modifier = Modifier.weight(1f), fontWeight = FontWeight.Black, fontSize = 14.sp, textAlign = TextAlign.Center)
+                        Text(text = "Date", modifier = Modifier.weight(1f), fontWeight = FontWeight.Black, fontSize = 14.sp, textAlign = TextAlign.End)
                     }
                 }
                 LazyColumn(
@@ -107,7 +107,7 @@ fun ScoreScreen(
             Row (
                 modifier = Modifier.fillMaxWidth()
                     .padding(bottom = 16.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ){
                 Button(
                     onClick = {
@@ -123,7 +123,7 @@ fun ScoreScreen(
                     ),
                     elevation = ButtonDefaults.buttonElevation(2.dp)
                 ) {
-                    Text(text = "Tekrar Oyna")
+                    Text(text = "Play Again")
                 }
 
                 OutlinedButton(
@@ -134,8 +134,21 @@ fun ScoreScreen(
                     },
                     shape = RoundedCornerShape(16.dp),
                 ) {
-                    Text(text = "Farklı Oyuncu",
+                    Text(text = "Different player",
                         color = Color(0xFF8B5CF6))
+                }
+
+                Button(
+                    onClick = {scoreViewModel.clearAllScores()},
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xDAB01B1A))
+                ) {
+                    Text(
+                        text = "Delete all",
+                        fontSize = 12.sp,
+                        color = Color.White
+                    )
                 }
             }
         }

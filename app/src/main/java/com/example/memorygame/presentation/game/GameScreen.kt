@@ -2,6 +2,7 @@ package com.example.memorygame.presentation.game
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -78,14 +80,12 @@ fun GameScreen(
             }
         }
     }
-
-
-    Scaffold(
-        topBar = { TopAppBar(title = { Text(text = "Memory Game") }) }
-    ) { paddingValues ->
+    Box (
+        modifier = Modifier.fillMaxSize()
+            .background(Color(0xB5B284DA))
+    ){
         Column(
-            modifier = Modifier.fillMaxSize()
-                .padding(paddingValues),
+            modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -112,9 +112,10 @@ fun ScoreBoard(moves: Int, score: Int) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Hamleler",
-                fontSize = 14.sp,
-                color = Color.Gray
+                text = "Hamle",
+                fontSize = 18.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Normal
             )
             Text(
                 text = "$moves",
@@ -127,14 +128,15 @@ fun ScoreBoard(moves: Int, score: Int) {
         ) {
             Text(
                 text = "Skor",
-                fontSize = 14.sp,
-                color = Color.Gray
+                fontSize = 18.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Normal
             )
             Text(
                 text = "$score",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF4CAF50)
+                color = Color(0xFF18AD21)
             )
         }
     }

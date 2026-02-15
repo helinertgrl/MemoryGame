@@ -79,7 +79,7 @@ fun OnboardingScreen(
                 )
                 Text(
                     text = "Ready to find the matches?",
-                    fontSize = 16.sp,
+                    fontSize = 18.sp,
                     fontStyle = FontStyle.Italic,
                     fontWeight = FontWeight.Normal,
                     color = Color.White.copy(alpha = 0.95f),
@@ -101,7 +101,7 @@ fun OnboardingScreen(
                 ) {
                     Text(
                         text = "Earn your place on the leaderboard!",
-                        fontSize = 15.sp,
+                        fontSize = 16.sp,
                         textAlign = TextAlign.Center,
                         fontStyle = FontStyle.Italic,
                         color = Color.Black,

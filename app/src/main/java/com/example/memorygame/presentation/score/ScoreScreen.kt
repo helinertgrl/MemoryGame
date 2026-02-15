@@ -65,7 +65,7 @@ fun ScoreScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "⭐ Leaderboard ⭐",
+                text = "Leaderboard",
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(vertical = 16.dp)

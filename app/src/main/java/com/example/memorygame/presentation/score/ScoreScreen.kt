@@ -1,6 +1,8 @@
 package com.example.memorygame.presentation.score
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.OutlinedButton
@@ -21,8 +24,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -42,107 +48,135 @@ fun ScoreScreen(
 ) {
     val scores by scoreViewModel.scores.collectAsStateWithLifecycle()
 
-    Column(
+    Box (
         modifier = Modifier.fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "Liderlik Tablosu",
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(vertical = 16.dp)
-        )
-        Card(
-            modifier = Modifier.fillMaxWidth()
-                .weight(1f),
-            shape = RoundedCornerShape(16.dp),
-            elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xB58760E0),
+                        Color(0xB5B284DA)
+                    )
+                )
             )
+    ){
+        Column(
+            modifier = Modifier.fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize()
-                    .padding(8.dp)
+            Text(
+                text = "Liderlik Tablosu",
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(vertical = 16.dp)
+            )
+            Card(
+                modifier = Modifier.fillMaxWidth()
+                    .weight(1f),
+                shape = RoundedCornerShape(24.dp),
+                elevation = CardDefaults.cardElevation(4.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.White
+                )
             ) {
-                item {
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = "Oyuncu",
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = "Hamle",
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = "Tarih",
-                            fontWeight = FontWeight.Bold
-                        )
+                Column(
+                    modifier = Modifier.padding(12.dp)
+                ) {
+                    Row (
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+                        Text(text = "Oyuncu", modifier = Modifier.weight(1.5f), fontWeight = FontWeight.Black, fontSize = 14.sp)
+                        Text(text = "Hamle", modifier = Modifier.weight(1f), fontWeight = FontWeight.Black, fontSize = 14.sp, textAlign = TextAlign.Center)
+                        Text(text = "Tarih", modifier = Modifier.weight(1f), fontWeight = FontWeight.Black, fontSize = 14.sp, textAlign = TextAlign.End)
                     }
                 }
-                items(scores) { item ->
-                    ScoreRow(item)
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    items(scores) { item ->
+                        ScoreRow(item)
+                    }
                 }
             }
-        }
-        Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-        Row (
-            modifier = Modifier.fillMaxWidth()
-                .padding(bottom = 16.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ){
-            Button(
-                onClick = {
-                    navController.navigate(Game.route) {
-                        popUpTo(Score.route) {
-                            inclusive = true
+            Row (
+                modifier = Modifier.fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ){
+                Button(
+                    onClick = {
+                        navController.navigate(Game.route) {
+                            popUpTo(Score.route) {
+                                inclusive = true
+                            }
                         }
-                    }
+                    },
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF8B5CF6)
+                    ),
+                    elevation = ButtonDefaults.buttonElevation(2.dp)
+                ) {
+                    Text(text = "Tekrar Oyna")
                 }
-            ) {
-                Text(text = "Tekrar Oyna")
-            }
 
-            OutlinedButton(
-                onClick = {
-                    navController.navigate(Main.route) {
-                        popUpTo(0)
-                    }
+                OutlinedButton(
+                    onClick = {
+                        navController.navigate(Main.route) {
+                            popUpTo(0)
+                        }
+                    },
+                    shape = RoundedCornerShape(16.dp),
+                ) {
+                    Text(text = "Farklı Oyuncu",
+                        color = Color(0xFF8B5CF6))
                 }
-            ) {
-                Text(text = "Farklı Oyuncu")
             }
         }
     }
+
 }
 
 @Composable
 fun ScoreRow(userScore: UserScore) {
     val dateString = remember(userScore.date) {
-        SimpleDateFormat("dd MMM", Locale.getDefault()).format(Date(userScore.date))
+        SimpleDateFormat("dd/MM/yy", Locale.getDefault()).format(Date(userScore.date))
     }
 
     Row (
         modifier = Modifier.fillMaxWidth()
-            .padding(8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically
     ){
-        Text(text = userScore.nickname,
-            fontWeight = FontWeight.Bold,
-            fontSize = 14.sp)
-        Text(text = "${userScore.moves}",
-            fontWeight = FontWeight.Bold,
-            fontSize = 14.sp)
-        Text(text = dateString,
-            fontWeight = FontWeight.Bold,
-            fontSize = 14.sp)
+        Text(
+            text = userScore.nickname,
+            modifier = Modifier.weight(1.5f),
+            fontWeight = FontWeight.Medium,
+            fontSize = 15.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+        Text(
+            text = "${userScore.moves}",
+            modifier = Modifier.weight(1f),
+            fontSize = 15.sp,
+            textAlign = TextAlign.Center,
+            color = Color(0xFF4CAF50),
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            text = dateString,
+            modifier = Modifier.weight(1f),
+            fontSize = 13.sp,
+            textAlign = TextAlign.End,
+            color = Color.Gray
+        )
 
     }
 }

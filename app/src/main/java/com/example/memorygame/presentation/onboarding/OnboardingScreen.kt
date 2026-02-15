@@ -48,8 +48,8 @@ fun OnboardingScreen(
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        Color(0xFF8760E0),
-                        Color(0xFFB284DA)
+                        Color(0xB48760E0),
+                        Color(0xB5B284DA)
                     )
                 )
             )

@@ -1,7 +1,7 @@
 package com.example.memorygame.presentation.onboarding
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,15 +10,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -26,7 +29,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.memorygame.presentation.Game
 
@@ -40,67 +42,119 @@ fun OnboardingScreen(
     val nickname by viewModel.nickname
     val error by viewModel.errorMessage
 
-    Column(
-        modifier = Modifier.fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFF8760E0),
+                        Color(0xFFB284DA)
+                    )
+                )
+            )
     ) {
-        Card(
-            border = BorderStroke(width = 2.dp, color = Color.Black),
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 12.dp ),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.DarkGray)
+        Column(
+            modifier = Modifier.fillMaxWidth()
+                .align(Alignment.TopCenter)
+                .padding(top = 60.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "Ready to find to matches?",
-                color = Color.White,
-                fontSize = 27.sp,
-                fontFamily = FontFamily.Serif,
-                fontStyle = FontStyle.Italic,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(13.dp)
-            )
-        }
-        Spacer(modifier = Modifier.padding(10.dp))
+            Column (
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(top = 40.dp)
+            ){
+                Text(
+                    text = "\uD83C\uDCCF",
+                    fontSize = 64.sp,
+                    modifier = Modifier.padding(bottom = 12.dp)
+                )
+                Text(
+                    text = "Memory Game",
+                    fontSize = 48.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    textAlign = TextAlign.Center
 
-        Text(
-            text = "The game is a simple memory game. " +
-                        "Find matching emojis on the face-down cards that appear on the screen. " +
-                        "If you find the matching emojis, you'll earn a score; if not, the card will be turned back over.",
-            fontSize = 15.sp,
-            fontFamily = FontFamily.Serif,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(8.dp)
-        )
-        Spacer(modifier = Modifier.height(24.dp))
+                )
+                Text(
+                    text = "Ready to find the matches?",
+                    fontSize = 16.sp,
+                    fontStyle = FontStyle.Italic,
+                    fontWeight = FontWeight.Normal,
+                    color = Color.White.copy(alpha = 0.95f),
+                    modifier = Modifier.padding(top = 3.dp)
+                )
+            }
+            Spacer(modifier = Modifier.padding( 30.dp))
+            Card(
+                modifier = Modifier.fillMaxWidth()
+                    .align(Alignment.CenterHorizontally)
+                    .padding(horizontal = 24.dp),
+                shape = RoundedCornerShape(24.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 12.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(32.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Earn your place on the leaderboard!",
+                        fontSize = 15.sp,
+                        textAlign = TextAlign.Center,
+                        fontStyle = FontStyle.Italic,
+                        color = Color.Black,
+                        fontWeight = FontWeight.Normal
+                    )
+                    Spacer(modifier = Modifier.height(32.dp))
 
-        OutlinedTextField(
-            value = nickname,
-            onValueChange = {viewModel.onNicknameChange(it)},
-            label = {Text("Takma Adını Yaz")},
-            isError = error != null,
-            supportingText = {if (error != null) Text(error!!, color = Color.Red)},
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(0.8f)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(
-            onClick = {
-                viewModel.saveUserAndContinue {
-                    navController.navigate(Game.route)
+                    OutlinedTextField(
+                        value = nickname,
+                        onValueChange = {viewModel.onNicknameChange(it)},
+                        label = {Text("Nickname",color = Color(0xFF6B7280), fontStyle = FontStyle.Italic)},
+                        isError = error != null,
+                        supportingText = {if (error != null) Text(error!!, color = Color.Red)},
+                        singleLine = true,
+                        shape = RoundedCornerShape(16.dp),
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color(0xFF8B5CF6),
+                            unfocusedBorderColor = Color(0xFFE5E7EB),
+                            focusedTextColor = Color(0xFF111827),
+                            unfocusedTextColor = Color(0xFF374151)
+                        )
+                    )
+                    Spacer(modifier = Modifier.height(28.dp))
+                    Button(
+                        onClick = {
+                            viewModel.saveUserAndContinue {
+                                navController.navigate(Game.route)
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                            .height(56.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF8B5CF6)
+                        ),
+                        elevation = ButtonDefaults.buttonElevation(
+                            defaultElevation = 6.dp,
+                            pressedElevation = 2.dp
+                        )
+                    ) {
+                        Text(
+                            text = "Start Game",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = FontFamily.Monospace,
+                            color = Color.White
+                        )
+                    }
                 }
-            },
-            modifier = Modifier.fillMaxWidth(0.6f)
-        ) {
-            Text(
-                text = "Start game",
-                fontSize = 18.sp,
-                fontFamily = FontFamily.Monospace
-            )
+            }
         }
+
     }
+
 }

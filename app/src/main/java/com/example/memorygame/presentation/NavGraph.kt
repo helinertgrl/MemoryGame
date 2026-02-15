@@ -81,7 +81,7 @@ fun memoryGame(){
     )
 
     if (startRoute != null){
-        NavHost(navController = navController, startDestination = startRoute){
+        NavHost(navController = navController, startDestination = Main.route){
             composable (route = Main.route) {
                 OnboardingScreen(
                     navController = navController,

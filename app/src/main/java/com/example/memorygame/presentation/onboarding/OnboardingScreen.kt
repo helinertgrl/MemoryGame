@@ -111,10 +111,15 @@ fun OnboardingScreen(
 
                     OutlinedTextField(
                         value = nickname,
-                        onValueChange = {viewModel.onNicknameChange(it)},
-                        label = {Text("Nickname",color = Color(0xFF6B7280), fontStyle = FontStyle.Italic)},
+                        onValueChange = {
+                            if (it.length <= 12) viewModel.onNicknameChange(it)
+                        },
+                        label = { Text("Nickname", color = Color(0xFF6B7280), fontStyle = FontStyle.Italic) },
                         isError = error != null,
-                        supportingText = {if (error != null) Text(error!!, color = Color.Red)},
+                        supportingText = {
+                            if (error != null) Text(error!!, color = Color.Red)
+                            else Text("${nickname.length}/12", color = Color.Gray, textAlign = TextAlign.End) // Sayaç eklemek şık durur
+                        },
                         singleLine = true,
                         shape = RoundedCornerShape(16.dp),
                         modifier = Modifier.fillMaxWidth(),

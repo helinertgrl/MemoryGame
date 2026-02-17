@@ -4,7 +4,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.memorygame.data.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -29,12 +28,22 @@ class OnboardingViewModel @Inject constructor(private val userPreferences: UserP
         if (newName.isNotBlank()) _errorMessage.value = null
     }
 
-    fun isNameValid(): Boolean{
-        return if (_nickname.value.trim().length < 3){
-            _errorMessage.value = "Nick en az 3 karakter olmalıdır!"
-            false
-        } else {
-            true
+    fun isNameValid(): Boolean {
+        val currentName = _nickname.value.trim()
+
+        return when {
+            currentName.isEmpty() -> {
+                _errorMessage.value = "Nickname cannot be empty."
+                false
+            }
+            currentName.length < 3 -> {
+                _errorMessage.value = "Nickname must be at least 3 characters long."
+                false
+            }
+            else -> {
+                _errorMessage.value = null
+                true
+            }
         }
     }
 

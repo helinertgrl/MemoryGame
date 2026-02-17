@@ -8,12 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.memorygame.data.UserPreferences
 import com.example.memorygame.presentation.game.GameScreen
 import com.example.memorygame.presentation.game.GameViewModel
 import com.example.memorygame.presentation.onboarding.OnboardingScreen
@@ -50,47 +48,40 @@ sealed class Screen(
 }
 
 @Composable
-fun MemoryGame() {
+fun Navigation() {
     val navController = rememberNavController()
-    val context = LocalContext.current
-    val userPrefs = UserPreferences(context)
-    val savedName by userPrefs.nickname.collectAsState(initial = null)
+    val startViewModel: StartViewModel = hiltViewModel()
+    val savedName by startViewModel.nickname.collectAsState(initial = null)
 
-    val startRoute: Any? = when {
-            savedName == null -> null
-            savedName!!.isNotEmpty() -> GameRoute
-            else -> MainRoute
-    }
+    if(savedName == null) return
 
-    if (startRoute != null) {
-        NavHost(
-            navController = navController,
-            startDestination = startRoute
-        ) {
-            composable<MainRoute> {
-                val onboardingVM: OnboardingViewModel = hiltViewModel()
-                OnboardingScreen(
-                    navController = navController,
-                    viewModel = onboardingVM
-                )
-            }
-            composable<GameRoute> {
-                val gameVM: GameViewModel = hiltViewModel()
-                GameScreen(
-                    viewModel = gameVM,
-                    navController = navController
-                )
-            }
-            composable<ScoreRoute> {
-                val scoreViewModel: ScoreViewModel = hiltViewModel()
+    val startRoute = if (savedName!!.isEmpty()) MainRoute else GameRoute
 
-                ScoreScreen(
-                    scoreViewModel = scoreViewModel,
-                    navController = navController
-                )
-            }
+    NavHost(
+        navController = navController,
+        startDestination = startRoute
+    ) {
+        composable<MainRoute> {
+            val onboardingVM: OnboardingViewModel = hiltViewModel()
+            OnboardingScreen(
+                navController = navController,
+                viewModel = onboardingVM
+            )
+        }
+        composable<GameRoute> {
+            val gameVM: GameViewModel = hiltViewModel()
+            GameScreen(
+                viewModel = gameVM,
+                navController = navController
+            )
+        }
+        composable<ScoreRoute> {
+            val scoreViewModel: ScoreViewModel = hiltViewModel()
+
+            ScoreScreen(
+                scoreViewModel = scoreViewModel,
+                navController = navController
+            )
         }
     }
 }
-
-

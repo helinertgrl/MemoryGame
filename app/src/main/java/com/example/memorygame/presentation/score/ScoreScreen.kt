@@ -34,9 +34,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.memorygame.domain.model.UserScore
-import com.example.memorygame.presentation.Game
-import com.example.memorygame.presentation.Main
-import com.example.memorygame.presentation.Score
+import com.example.memorygame.presentation.GameRoute
+import com.example.memorygame.presentation.MainRoute
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -92,16 +91,18 @@ fun ScoreScreen(
                         Text(text = "Moves", modifier = Modifier.weight(1f), fontWeight = FontWeight.Black, fontSize = 14.sp, textAlign = TextAlign.Center)
                         Text(text = "Date", modifier = Modifier.weight(1f), fontWeight = FontWeight.Black, fontSize = 14.sp, textAlign = TextAlign.End)
                     }
-                }
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    items(scores) { item ->
-                        ScoreRow(item)
+
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        items(scores) { item ->
+                            ScoreRow(item)
+                        }
                     }
                 }
             }
+
             Spacer(modifier = Modifier.height(24.dp))
 
             Row (
@@ -111,8 +112,8 @@ fun ScoreScreen(
             ){
                 Button(
                     onClick = {
-                        navController.navigate(Game.route) {
-                            popUpTo(Score.route) {
+                        navController.navigate(GameRoute) {
+                            popUpTo(GameRoute) {
                                 inclusive = true
                             }
                         }
@@ -128,7 +129,7 @@ fun ScoreScreen(
 
                 OutlinedButton(
                     onClick = {
-                        navController.navigate(Main.route) {
+                        navController.navigate(MainRoute) {
                             popUpTo(0)
                         }
                     },

@@ -48,8 +48,8 @@ class GameViewModel @Inject constructor(
     }
 
     fun onCardClick(index: Int, shuffledList : List<Int>){
-        if (faceUpCards.contains(index) || matchedCards.contains(index) || faceUpCards.size >=2) return
 
+        if (faceUpCards.size >= 2 || faceUpCards.contains(index) || matchedCards.contains(index)) return
         faceUpCards.add(index)
 
         if (faceUpCards.size == 2){

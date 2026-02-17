@@ -21,16 +21,7 @@
 
 ## 📖 Table of Contents
 
-- [About](#-about)
-- [Features](#-features)
-- [Screenshots](#-screenshots)
-- [Tech Stack](#-tech-stack)
-- [Architecture](#-architecture)
-- [Project Structure](#-project-structure)
-- [Getting Started](#-getting-started)
-- [CI/CD Pipeline](#-cicd-pipeline)
-- [How to Play](#-how-to-play)
-- [Contributing](#-contributing)
+[About](#-about) • [Features](#-features) • [Screenshots](#-screenshots) • [Tech Stack](#-tech-stack) • [Architecture](#-architecture) • [Project Structure](#-project-structure) • [Getting Started](#-getting-started) • [CI/CD Pipeline](#-cicd-pipeline) • [How to Play](#-how-to-play) • [Contributing](#-contributing)
 
 ---
 
@@ -72,32 +63,22 @@ This project was built as a hands-on exercise in **clean architecture**, **Jetpa
 
 ## 🛠 Tech Stack
 
-```
-📦 Memory Game
-├── 🎨 UI Layer
-│   ├── Jetpack Compose          - Declarative UI toolkit
-│   ├── Material 3               - Design system components
-│   └── Compose Navigation       - Type-safe screen navigation
-│
-├── 🧠 Business Logic
-│   ├── ViewModel                - UI state management
-│   ├── Kotlin Coroutines        - Asynchronous operations
-│   └── Kotlin Flow              - Reactive data streams
-│
-├── 💾 Data Layer
-│   ├── Room Database            - Local score persistence
-│   ├── DataStore Preferences    - Nickname storage
-│   └── Repository Pattern       - Clean data abstraction
-│
-├── 🔧 DI & Tooling
-│   ├── Hilt                     - Dependency injection
-│   └── GitHub Actions           - CI/CD pipeline
-│
-└── 🧪 Testing
-    ├── JUnit 4                  - Unit testing framework
-    ├── MockK                    - Mocking library for Kotlin
-    └── Coroutines Test          - Testing asynchronous code
-```
+| Layer | Technology | Purpose |
+|---|---|---|
+| **🎨 UI** | Jetpack Compose | Declarative UI toolkit |
+| **🎨 UI** | Material 3 | Design system & components |
+| **🎨 UI** | Compose Navigation | Type-safe screen navigation |
+| **🧠 Logic** | ViewModel | UI state management |
+| **🧠 Logic** | Kotlin Coroutines | Asynchronous operations |
+| **🧠 Logic** | Kotlin Flow | Reactive data streams |
+| **💾 Data** | Room Database | Local score persistence |
+| **💾 Data** | DataStore Preferences | Nickname storage |
+| **💾 Data** | Repository Pattern | Clean data abstraction |
+| **🔧 DI** | Hilt | Dependency injection |
+| **⚡ CI/CD** | GitHub Actions | Automated build & test pipeline |
+| **🧪 Testing** | JUnit 4 | Unit testing framework |
+| **🧪 Testing** | MockK | Mocking library for Kotlin |
+| **🧪 Testing** | Coroutines Test | Testing asynchronous code |
 
 ---
 

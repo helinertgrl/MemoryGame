@@ -4,6 +4,8 @@ import android.content.Context
 import com.example.memorygame.data.AppDatabase
 import com.example.memorygame.data.ScoreDao
 import com.example.memorygame.data.UserPreferences
+import com.example.memorygame.data.repository.ScoreRepositoryImpl
+import com.example.memorygame.domain.repository.ScoreRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,5 +33,14 @@ object AppModule {
     @Singleton
     fun provideUserPreferences(@ApplicationContext context: Context): UserPreferences{
         return UserPreferences(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideScoreRepository(
+        scoreDao: ScoreDao,
+        userPreferences: UserPreferences
+    ): ScoreRepository {
+        return ScoreRepositoryImpl(scoreDao, userPreferences)
     }
 }

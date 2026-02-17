@@ -13,12 +13,16 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.example.memorygame.R
+import com.example.memorygame.domain.repository.ScoreRepository
 
 @HiltViewModel
 class GameViewModel @Inject constructor(
-    private val scoreDao: ScoreDao,
-    private val userPreferences: UserPreferences
+    private val repository: ScoreRepository
 ): ViewModel() {
+
+    private val _cards = mutableStateOf<List<Int>>(emptyList())
+    val cards: State<List<Int>> = _cards
     private val _moves = mutableStateOf(0)
     val moves: State<Int> = _moves
 
@@ -31,15 +35,28 @@ class GameViewModel @Inject constructor(
     val faceUpCards = mutableStateListOf<Int>()
     val matchedCards = mutableStateListOf<Int>()
 
+    init {
+        generateCards()
+    }
+
+    private fun generateCards() {
+        val baseEmojis = listOf(
+            R.drawable.alien, R.drawable.monkey, R.drawable.sad,
+            R.drawable.poop, R.drawable.heart, R.drawable.evil,
+            R.drawable.pumpkin, R.drawable.ghost
+        )
+        _cards.value = (baseEmojis + baseEmojis).shuffled()
+    }
+
     fun saveFinalScore(onComplete: () -> Unit){
         if (_isSaving.value) return
         _isSaving.value = true
 
         viewModelScope.launch {
-            val name = userPreferences.nickname.first()
+            val name = repository.getNickname().first()
             if (name.isNotBlank()){
                 val finalScore = UserScore(nickname = name, moves = _moves.value, score = _score.value)
-                scoreDao.insertScore(finalScore)
+                repository.insertScore(finalScore)
                 delay(500)
                 _isSaving.value = false
                 onComplete()
@@ -78,5 +95,6 @@ class GameViewModel @Inject constructor(
         _score.value = 0
         faceUpCards.clear()
         matchedCards.clear()
+        generateCards()
     }
 }

@@ -5,12 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.memorygame.data.UserPreferences
+import com.example.memorygame.domain.repository.ScoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class OnboardingViewModel @Inject constructor(private val userPreferences: UserPreferences): ViewModel() {
+class OnboardingViewModel @Inject constructor(
+    private val repository: ScoreRepository): ViewModel() {
 
     private val _nickname = mutableStateOf("")
     val nickname: State<String> = _nickname
@@ -20,7 +22,7 @@ class OnboardingViewModel @Inject constructor(private val userPreferences: UserP
 
     fun saveNickname(nickname: String){
         viewModelScope.launch {
-            userPreferences.saveNickname(nickname)
+            repository.saveNickname(nickname)
         }
     }
     fun onNicknameChange(newName: String){
@@ -50,7 +52,7 @@ class OnboardingViewModel @Inject constructor(private val userPreferences: UserP
     fun saveUserAndContinue(onSuccess: () -> Unit) {
         if (isNameValid()) {
             viewModelScope.launch {
-                userPreferences.saveNickname(nickname.value)
+                repository.saveNickname(nickname.value)
                 onSuccess()
             }
         }

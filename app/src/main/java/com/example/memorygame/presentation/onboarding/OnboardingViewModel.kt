@@ -19,11 +19,6 @@ class OnboardingViewModel @Inject constructor(
     private val _errorMessage = mutableStateOf<String?>(null)
     val errorMessage: State<String?> = _errorMessage
 
-    fun saveNickname(nickname: String){
-        viewModelScope.launch {
-            repository.saveNickname(nickname)
-        }
-    }
     fun onNicknameChange(newName: String){
         _nickname.value = newName
         if (newName.isNotBlank()) _errorMessage.value = null

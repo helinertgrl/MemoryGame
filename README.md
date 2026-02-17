@@ -59,10 +59,9 @@ This project was built as a hands-on exercise in **clean architecture**, **Jetpa
 
 ## 📱 Screenshots
 
-> 💡 *Screenshots coming soon — feel free to open the project and run it yourself!*
-
 | Onboarding | Game Board | Leaderboard |
 |:---:|:---:|:---:|
+| <img src="screenshot/OnboardingScreen.png" width="200"> | <img src="screenshot/GameScreen.png" width="200"> | <img src="screenshot/ScoreScreen.png" width="200"> |
 | Enter your nickname | Match the emoji pairs | See all-time scores |
 
 ---

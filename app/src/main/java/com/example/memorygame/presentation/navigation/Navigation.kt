@@ -12,7 +12,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.memorygame.presentation.navigation.StartViewModel
 import com.example.memorygame.presentation.game.GameScreen
 import com.example.memorygame.presentation.game.GameViewModel
 import com.example.memorygame.presentation.onboarding.OnboardingScreen

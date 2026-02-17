@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.memorygame.data.local.ScoreDao
 import com.example.memorygame.domain.model.UserScore
 
 @Database(entities = [UserScore::class], version = 1)

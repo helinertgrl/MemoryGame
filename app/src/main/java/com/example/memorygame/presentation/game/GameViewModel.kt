@@ -8,11 +8,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.memorygame.data.ScoreDao
 import com.example.memorygame.data.UserPreferences
 import com.example.memorygame.domain.model.UserScore
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class GameViewModel(
+@HiltViewModel
+class GameViewModel @Inject constructor(
     private val scoreDao: ScoreDao,
     private val userPreferences: UserPreferences
 ): ViewModel() {

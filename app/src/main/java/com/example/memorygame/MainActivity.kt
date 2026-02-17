@@ -4,19 +4,18 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.memorygame.presentation.game.GameScreen
-import com.example.memorygame.presentation.memoryGame
-import com.example.memorygame.presentation.score.ScoreScreen
+import com.example.memorygame.presentation.MemoryGame
 import com.example.memorygame.ui.theme.MemoryGameTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             MemoryGameTheme {
-                memoryGame()
+                MemoryGame()
             }
         }
     }

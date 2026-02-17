@@ -30,7 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.memorygame.presentation.Game
+import com.example.memorygame.presentation.GameRoute
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -134,7 +134,7 @@ fun OnboardingScreen(
                     Button(
                         onClick = {
                             viewModel.saveUserAndContinue {
-                                navController.navigate(Game.route)
+                                navController.navigate(GameRoute)
                             }
                         },
                         modifier = Modifier.fillMaxWidth()

@@ -6,9 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.memorygame.data.UserPreferences
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class OnboardingViewModel(private val userPreferences: UserPreferences): ViewModel() {
+@HiltViewModel
+class OnboardingViewModel @Inject constructor(private val userPreferences: UserPreferences): ViewModel() {
 
     private val _nickname = mutableStateOf("")
     val nickname: State<String> = _nickname
@@ -16,6 +19,11 @@ class OnboardingViewModel(private val userPreferences: UserPreferences): ViewMod
     private val _errorMessage = mutableStateOf<String?>(null)
     val errorMessage: State<String?> = _errorMessage
 
+    fun saveNickname(nickname: String){
+        viewModelScope.launch {
+            userPreferences.saveNickname(nickname)
+        }
+    }
     fun onNicknameChange(newName: String){
         _nickname.value = newName
         if (newName.isNotBlank()) _errorMessage.value = null

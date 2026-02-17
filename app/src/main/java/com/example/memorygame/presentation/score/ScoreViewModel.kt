@@ -5,12 +5,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.memorygame.data.ScoreDao
 import com.example.memorygame.domain.model.UserScore
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ScoreViewModel(private val scoreDao: ScoreDao): ViewModel() {
+@HiltViewModel
+class ScoreViewModel @Inject constructor(private val scoreDao: ScoreDao): ViewModel() {
     val scores: StateFlow<List<UserScore>> = scoreDao.getAllScores()
         .stateIn(
             scope = viewModelScope,

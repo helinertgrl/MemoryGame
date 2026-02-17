@@ -30,7 +30,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.memorygame.presentation.GameRoute
+import com.example.memorygame.presentation.navigation.GameRoute
+import com.example.memorygame.presentation.onboarding.components.NicknameInputCard
+import com.example.memorygame.presentation.onboarding.components.OnboardingHeader
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,106 +62,20 @@ fun OnboardingScreen(
                 .padding(top = 60.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column (
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(top = 40.dp)
-            ){
-                Text(
-                    text = "\uD83C\uDCCF",
-                    fontSize = 64.sp,
-                    modifier = Modifier.padding(bottom = 12.dp)
-                )
-                Text(
-                    text = "Memory Game",
-                    fontSize = 48.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    textAlign = TextAlign.Center
-
-                )
-                Text(
-                    text = "Ready to find the matches?",
-                    fontSize = 18.sp,
-                    fontStyle = FontStyle.Italic,
-                    fontWeight = FontWeight.Normal,
-                    color = Color.White.copy(alpha = 0.95f),
-                    modifier = Modifier.padding(top = 3.dp)
-                )
-            }
+            OnboardingHeader()
             Spacer(modifier = Modifier.padding( 30.dp))
-            Card(
-                modifier = Modifier.fillMaxWidth()
-                    .align(Alignment.CenterHorizontally)
-                    .padding(horizontal = 24.dp),
-                shape = RoundedCornerShape(24.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
-                elevation = CardDefaults.cardElevation(defaultElevation = 12.dp)
-            ) {
-                Column(
-                    modifier = Modifier.padding(32.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "Earn your place on the leaderboard!",
-                        fontSize = 16.sp,
-                        textAlign = TextAlign.Center,
-                        fontStyle = FontStyle.Italic,
-                        color = Color.Black,
-                        fontWeight = FontWeight.Normal
-                    )
-                    Spacer(modifier = Modifier.height(32.dp))
-
-                    OutlinedTextField(
-                        value = nickname,
-                        onValueChange = {
-                            if (it.length <= 12) viewModel.onNicknameChange(it)
-                        },
-                        label = { Text("Nickname", color = Color(0xFF6B7280), fontStyle = FontStyle.Italic) },
-                        isError = error != null,
-                        supportingText = {
-                            if (error != null) Text(error!!, color = Color.Red)
-                            else Text("${nickname.length}/12", color = Color.Gray, textAlign = TextAlign.End) // Sayaç eklemek şık durur
-                        },
-                        singleLine = true,
-                        shape = RoundedCornerShape(16.dp),
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = Color(0xFF8B5CF6),
-                            unfocusedBorderColor = Color(0xFFE5E7EB),
-                            focusedTextColor = Color(0xFF111827),
-                            unfocusedTextColor = Color(0xFF374151)
-                        )
-                    )
-                    Spacer(modifier = Modifier.height(28.dp))
-                    Button(
-                        onClick = {
-                            viewModel.saveUserAndContinue {
-                                navController.navigate(GameRoute)
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                            .height(56.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF8B5CF6)
-                        ),
-                        elevation = ButtonDefaults.buttonElevation(
-                            defaultElevation = 6.dp,
-                            pressedElevation = 2.dp
-                        )
-                    ) {
-                        Text(
-                            text = "Start Game",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = FontFamily.Monospace,
-                            color = Color.White
-                        )
+            NicknameInputCard(
+                nickname = nickname,
+                error = error,
+                onNicknameChange = {newName ->
+                    if (newName.length <=12) viewModel.onNicknameChange(newName)
+                },
+                onStartClick = {
+                    viewModel.saveUserAndContinue {
+                        navController.navigate(GameRoute)
                     }
                 }
-            }
+            )
         }
-
     }
-
 }

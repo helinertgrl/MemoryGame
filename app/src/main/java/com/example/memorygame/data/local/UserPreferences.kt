@@ -1,4 +1,4 @@
-package com.example.memorygame.data
+package com.example.memorygame.data.local
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit

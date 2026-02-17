@@ -13,10 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
-import com.example.memorygame.presentation.GameRoute
-import com.example.memorygame.presentation.ScoreRoute
-import com.example.memorygame.presentation.components.CardGrid
-import com.example.memorygame.presentation.components.ScoreBoard
+import com.example.memorygame.presentation.game.components.CardGrid
+import com.example.memorygame.presentation.game.components.ScoreBoard
+import com.example.memorygame.presentation.navigation.GameRoute
+import com.example.memorygame.presentation.navigation.ScoreRoute
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -25,7 +25,7 @@ fun GameScreen(
     navController: NavController,
     viewModel: GameViewModel) {
 
-    val emojilist by viewModel.cards
+    val emojilist = viewModel.state.value.cards
 
     LaunchedEffect(Unit) {
         viewModel.reset()
@@ -41,7 +41,7 @@ fun GameScreen(
     }
 
     LaunchedEffect(viewModel.matchedCards.size) {
-        if (viewModel.matchedCards.size == emojilist.size && emojilist.isNotEmpty()) {
+        if (viewModel.matchedCards.size == viewModel.state.value.cards.size && emojilist.isNotEmpty()) {
             viewModel.saveFinalScore{
                 navController.navigate(ScoreRoute){
                     popUpTo(GameRoute) { inclusive = true}
@@ -58,13 +58,13 @@ fun GameScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            ScoreBoard(moves = viewModel.moves.value, score = viewModel.score.value)
+            ScoreBoard(moves = viewModel.state.value.moves, score = viewModel.state.value.score)
 
             CardGrid(
                 shuffledList = emojilist,
                 faceUpCard = viewModel.faceUpCards,
                 matchedCards = viewModel.matchedCards,
-                onCardClick = { index -> viewModel.onCardClick(index, emojilist) }
+                onCardClick = { index -> viewModel.onCardClick(index) }
             )
         }
     }

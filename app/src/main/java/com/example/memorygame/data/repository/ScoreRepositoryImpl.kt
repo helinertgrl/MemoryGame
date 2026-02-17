@@ -1,7 +1,7 @@
 package com.example.memorygame.data.repository
 
-import com.example.memorygame.data.ScoreDao
-import com.example.memorygame.data.UserPreferences
+import com.example.memorygame.data.local.ScoreDao
+import com.example.memorygame.data.local.UserPreferences
 import com.example.memorygame.domain.model.UserScore
 import com.example.memorygame.domain.repository.ScoreRepository
 import kotlinx.coroutines.flow.Flow

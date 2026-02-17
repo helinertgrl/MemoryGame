@@ -1,9 +1,9 @@
 package com.example.memorygame.di
 
 import android.content.Context
-import com.example.memorygame.data.AppDatabase
-import com.example.memorygame.data.ScoreDao
-import com.example.memorygame.data.UserPreferences
+import com.example.memorygame.data.local.AppDatabase
+import com.example.memorygame.data.local.ScoreDao
+import com.example.memorygame.data.local.UserPreferences
 import com.example.memorygame.data.repository.ScoreRepositoryImpl
 import com.example.memorygame.domain.repository.ScoreRepository
 import dagger.Module

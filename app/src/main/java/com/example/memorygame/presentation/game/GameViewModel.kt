@@ -5,32 +5,29 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.memorygame.data.ScoreDao
-import com.example.memorygame.data.UserPreferences
+import com.example.memorygame.R
 import com.example.memorygame.domain.model.UserScore
+import com.example.memorygame.domain.repository.ScoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import com.example.memorygame.R
-import com.example.memorygame.domain.repository.ScoreRepository
+
+data class GameState(
+    val cards: List<Int> = emptyList(),
+    val moves: Int = 0,
+    val score: Int = 0,
+    val isSaving: Boolean = false
+)
 
 @HiltViewModel
 class GameViewModel @Inject constructor(
     private val repository: ScoreRepository
 ): ViewModel() {
 
-    private val _cards = mutableStateOf<List<Int>>(emptyList())
-    val cards: State<List<Int>> = _cards
-    private val _moves = mutableStateOf(0)
-    val moves: State<Int> = _moves
-
-    private val _isSaving = mutableStateOf(false)
-    val isSaving : State<Boolean> = _isSaving
-
-    private val _score = mutableStateOf(0)
-    val score: State<Int> = _score
+    private val _state = mutableStateOf(GameState())
+    val state: State<GameState> = _state
 
     val faceUpCards = mutableStateListOf<Int>()
     val matchedCards = mutableStateListOf<Int>()
@@ -45,43 +42,47 @@ class GameViewModel @Inject constructor(
             R.drawable.poop, R.drawable.heart, R.drawable.evil,
             R.drawable.pumpkin, R.drawable.ghost
         )
-        _cards.value = (baseEmojis + baseEmojis).shuffled()
+        _state.value = _state.value.copy(cards = (baseEmojis + baseEmojis).shuffled())
     }
 
     fun saveFinalScore(onComplete: () -> Unit){
-        if (_isSaving.value) return
-        _isSaving.value = true
+        if (_state.value.isSaving) return
+        _state.value = _state.value.copy(isSaving = true)
 
         viewModelScope.launch {
             val name = repository.getNickname().first()
             if (name.isNotBlank()){
-                val finalScore = UserScore(nickname = name, moves = _moves.value, score = _score.value)
+                val finalScore = UserScore(
+                    nickname = name,
+                    moves = _state.value.moves,
+                    score = _state.value.score
+                )
                 repository.insertScore(finalScore)
                 delay(500)
-                _isSaving.value = false
+                _state.value = _state.value.copy(isSaving = false)
                 onComplete()
             }
         }
     }
 
-    fun onCardClick(index: Int, shuffledList : List<Int>){
+    fun onCardClick(index: Int){
+
+        val cards = _state.value.cards
 
         if (faceUpCards.size >= 2 || faceUpCards.contains(index) || matchedCards.contains(index)) return
         faceUpCards.add(index)
 
         if (faceUpCards.size == 2){
-            _moves.value++
+            _state.value = _state.value.copy(moves = _state.value.moves + 1)
+
             val first = faceUpCards[0]
             val second = faceUpCards[1]
 
-            if (shuffledList[first] == shuffledList[second]) {
+            if (cards[first] == cards[second]) {
                 matchedCards.add(first)
                 matchedCards.add(second)
-                _score.value++
+                _state.value = _state.value.copy(score = _state.value.score + 1)
                 faceUpCards.clear()
-            }
-            else{
-
             }
         }
     }
@@ -91,8 +92,7 @@ class GameViewModel @Inject constructor(
     }
 
     fun reset(){
-        _moves.value = 0
-        _score.value = 0
+        _state.value = GameState()
         faceUpCards.clear()
         matchedCards.clear()
         generateCards()

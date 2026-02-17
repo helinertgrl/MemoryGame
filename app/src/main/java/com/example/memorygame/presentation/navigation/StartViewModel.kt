@@ -1,7 +1,7 @@
-package com.example.memorygame.presentation
+package com.example.memorygame.presentation.navigation
 
 import androidx.lifecycle.ViewModel
-import com.example.memorygame.data.UserPreferences
+import com.example.memorygame.data.local.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

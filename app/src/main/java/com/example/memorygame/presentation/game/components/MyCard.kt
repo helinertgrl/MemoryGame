@@ -1,4 +1,4 @@
-package com.example.memorygame.presentation.components
+package com.example.memorygame.presentation.game.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image

@@ -1,4 +1,4 @@
-package com.example.memorygame.data
+package com.example.memorygame.data.local
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ScoreDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertScore(score: UserScore)
 
     @Query("SELECT * FROM scores ORDER BY score DESC, moves ASC")

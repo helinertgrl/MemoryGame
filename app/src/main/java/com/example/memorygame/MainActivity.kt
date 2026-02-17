@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.example.memorygame.presentation.Navigation
+import com.example.memorygame.presentation.navigation.Navigation
 import com.example.memorygame.ui.theme.MemoryGameTheme
 import dagger.hilt.android.AndroidEntryPoint
 

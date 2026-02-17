@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.memorygame.presentation.navigation.GameRoute
-import com.example.memorygame.presentation.navigation.MainRoute
+import com.example.memorygame.presentation.navigation.OnboardingRoute
 import com.example.memorygame.presentation.score.components.ScoreRow
 
 @Composable
@@ -124,7 +124,7 @@ fun ScoreScreen(
 
                 OutlinedButton(
                     onClick = {
-                        navController.navigate(MainRoute) {
+                        navController.navigate(OnboardingRoute) {
                             popUpTo(0)
                         }
                     },

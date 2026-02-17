@@ -66,25 +66,32 @@ class GameViewModel @Inject constructor(
     }
 
     fun onCardClick(index: Int){
-
+        val currentState = _state.value
         val cards = _state.value.cards
 
         if (faceUpCards.size >= 2 || faceUpCards.contains(index) || matchedCards.contains(index)) return
         faceUpCards.add(index)
 
         if (faceUpCards.size == 2){
-            _state.value = _state.value.copy(moves = _state.value.moves + 1)
+            _state.value = currentState.copy(moves = currentState.moves + 1)
 
             val first = faceUpCards[0]
             val second = faceUpCards[1]
 
             if (cards[first] == cards[second]) {
-                matchedCards.add(first)
-                matchedCards.add(second)
-                _state.value = _state.value.copy(score = _state.value.score + 1)
-                faceUpCards.clear()
+                handleMatch(first, second)
             }
         }
+    }
+
+    private fun handleMatch(first: Int, second: Int) {
+        matchedCards.add(first)
+        matchedCards.add(second)
+
+        _state.value = _state.value.copy(
+            score = _state.value.score + 1
+        )
+        faceUpCards.clear()
     }
 
     fun clearFaceUp() {
